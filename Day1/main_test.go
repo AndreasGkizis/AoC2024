@@ -25,7 +25,7 @@ func TestCalculateDiffs(t *testing.T) {
 			want: 11,
 		},
 		{
-			name: " All same values",
+			name: "All same values",
 			args: args{
 				leftList:  []int{1, 2, 3, 3, 3, 4},
 				rightList: []int{1, 2, 3, 3, 3, 4},
@@ -104,21 +104,36 @@ func TestGetListsFromLines(t *testing.T) {
 		text []string
 	}
 	tests := []struct {
-		name  string
-		args  args
-		want  []int
-		want1 []int
+		name      string
+		args      args
+		wantLeft  []int
+		wantRight []int
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Multiple spaces between numbers",
+			args: args{
+				text: []string{"3   4", "2    5", "1  3"},
+			},
+			wantLeft:  []int{1, 2, 3},
+			wantRight: []int{3, 4, 5},
+		},
+		{
+			name: "Single space between numbers",
+			args: args{
+				text: []string{"3 4", "2 5", "1 3"},
+			},
+			wantLeft:  []int{1, 2, 3},
+			wantRight: []int{3, 4, 5},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := GetListsFromLines(tt.args.text)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetListsFromLines() got = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(got, tt.wantLeft) {
+				t.Errorf("GetListsFromLines() got = %v, want %v", got, tt.wantLeft)
 			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("GetListsFromLines() got1 = %v, want %v", got1, tt.want1)
+			if !reflect.DeepEqual(got1, tt.wantRight) {
+				t.Errorf("GetListsFromLines() got1 = %v, want %v", got1, tt.wantRight)
 			}
 		})
 	}

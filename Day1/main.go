@@ -63,7 +63,7 @@ func GetListsFromLines(text []string) ([]int, []int) {
 	var leftList []int
 	var rightList []int
 	for _, val := range text {
-		parts := strings.Split(val, "   ")
+		parts := strings.Fields(val)
 
 		left, _ := strconv.Atoi(parts[0])
 		right, _ := strconv.Atoi(parts[1])
