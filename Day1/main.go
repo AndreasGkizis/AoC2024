@@ -9,44 +9,54 @@ import (
 	"strings"
 )
 
-type Numpair struct {
-	LeftNum  int
-	RightNum int
-}
-
-func (n Numpair) GetDif() int {
-	if n.LeftNum > n.RightNum {
-		return n.LeftNum - n.RightNum
-	} else {
-		return n.RightNum - n.LeftNum
-	}
-}
-
 func main() {
 	Part1()
 	Part2()
 }
 
 func Part2() {
-	text, _ := ReadFile("testinput.txt")
+	text, _ := ReadFile("input.txt")
 	leftList, rightList := GetListsFromLines(text)
 	result := CalculateSimilarity(leftList, rightList)
 
 	log.Println(result)
 }
 
-func CalculateSimilarity(leftList []int, rightList []int) int {
-	panic("unimplemented")
-}
-
 func Part1() {
-	text, _ := ReadFile("testinput.txt")
+	text, _ := ReadFile("input.txt")
 
 	leftList, rightList := GetListsFromLines(text)
 
 	result := CalculateDiffs(leftList, rightList)
 
 	log.Println(result)
+}
+
+func CalculateSimilarity(leftList []int, rightList []int) int {
+	result := 0
+	// map [TheNumber]how many times it appears
+	frequencyMap := CreateFrequencyMap(rightList)
+	for _, value := range leftList {
+		occuranceFreq, ok := frequencyMap[value]
+
+		if ok {
+			result += value * occuranceFreq
+		}
+	}
+	return result
+}
+
+func CreateFrequencyMap(rightList []int) map[int]int {
+	fmap := make(map[int]int)
+	for _, val := range rightList {
+		_, ok := fmap[val]
+		if ok {
+			fmap[val]++
+		} else {
+			fmap[val] = 1
+		}
+	}
+	return fmap
 }
 
 func GetListsFromLines(text []string) ([]int, []int) {
