@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bufio"
+	common "AoC2024/common"
 	"log"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -15,7 +14,7 @@ func main() {
 }
 
 func Part2() {
-	text, _ := ReadFile("input.txt")
+	text, _ := common.ReadLinesToStringSlice("input.txt")
 	leftList, rightList := GetListsFromLines(text)
 	result := CalculateSimilarity(leftList, rightList)
 
@@ -23,7 +22,7 @@ func Part2() {
 }
 
 func Part1() {
-	text, _ := ReadFile("input.txt")
+	text, _ := common.ReadLinesToStringSlice("input.txt")
 
 	leftList, rightList := GetListsFromLines(text)
 
@@ -75,24 +74,6 @@ func GetListsFromLines(text []string) ([]int, []int) {
 	sort.Ints(leftList)
 	sort.Ints(rightList)
 	return leftList, rightList
-}
-
-func ReadFile(filename string) ([]string, error) {
-	readFile, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer readFile.Close()
-
-	scanner := bufio.NewScanner(readFile)
-	scanner.Split(bufio.ScanLines)
-
-	var text []string
-	for scanner.Scan() {
-		text = append(text, scanner.Text())
-	}
-
-	return text, nil
 }
 
 func CalculateDiffs(leftList, rightList []int) int {

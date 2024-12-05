@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	text, err := common.ReadLinesToStringSlice("testinput.txt")
+	text, err := common.ReadLinesToStringSlice("input.txt")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -32,30 +32,33 @@ func CountSafeLines(intSlices [][]int) int {
 
 func IsSliceSafe(input []int) bool {
 	maxDiff := 3
-	isAscendingOrder := input[0] < input[1]
 
-	underMaxDiff := isUnderMaxDiff(input, isAscendingOrder, maxDiff)
+	underMaxDiff := isUnderMaxDiff(input, maxDiff)
 	staysInSameOrder := staysInOrder(input)
+	result := underMaxDiff && staysInSameOrder
 
-	return underMaxDiff && staysInSameOrder
+	if !result {
+		log.Print(input)
+		log.Print(result)
+	}
+	return result
 }
 
 func staysInOrder(input []int) bool {
 	asc := sort.SliceIsSorted(input, func(p, q int) bool { return input[p] < input[q] })
 	desc := sort.SliceIsSorted(input, func(p, q int) bool { return input[p] > input[q] })
+	var result = asc || desc
 
-	return asc || desc
+	return result
 }
 
-func isUnderMaxDiff(input []int, isAscendingOrder bool, maxDiff int) bool {
+func isUnderMaxDiff(input []int, maxDiff int) bool {
 	for indx, val := range input {
 		if indx < len(input)-1 {
 			left := val
 			right := input[indx+1]
-
-			if isAscendingOrder && right-left >= maxDiff {
-				return false
-			} else if !isAscendingOrder && left-right >= maxDiff {
+			diff := absInt(right - left)
+			if diff == 0 || diff > maxDiff {
 				return false
 			}
 		}
@@ -80,4 +83,11 @@ func BreakStringToInts(input string) []int {
 		result = append(result, number)
 	}
 	return result
+}
+
+func absInt(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
