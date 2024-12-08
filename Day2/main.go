@@ -14,8 +14,32 @@ func main() {
 		log.Panic(err)
 	}
 	intSlices := MakeIntSlices(text)
-	safeCount := CountSafeLines(intSlices)
-	log.Print(safeCount)
+	part1 := CountSafeLines(intSlices)
+	part2 := CountSafeLinesWithfaultTolerance(intSlices)
+	log.Print(part1)
+	log.Print(part2)
+}
+
+func CountSafeLinesWithfaultTolerance(intSlices [][]int) int {
+	result := 0
+
+	for _, val := range intSlices {
+		for indx := range val {
+
+			copyVal := append([]int(nil), val...)
+
+			sliceleft := copyVal[:indx]
+			sliceright := copyVal[indx+1:]
+
+			newSlice := append(sliceleft, sliceright...)
+
+			if IsSliceSafe(newSlice) {
+				result++
+				break
+			}
+		}
+	}
+	return result
 }
 
 func CountSafeLines(intSlices [][]int) int {
@@ -27,7 +51,6 @@ func CountSafeLines(intSlices [][]int) int {
 		}
 	}
 	return result
-
 }
 
 func IsSliceSafe(input []int) bool {
@@ -37,19 +60,14 @@ func IsSliceSafe(input []int) bool {
 	staysInSameOrder := staysInOrder(input)
 	result := underMaxDiff && staysInSameOrder
 
-	if !result {
-		log.Print(input)
-		log.Print(result)
-	}
 	return result
 }
 
 func staysInOrder(input []int) bool {
 	asc := sort.SliceIsSorted(input, func(p, q int) bool { return input[p] < input[q] })
 	desc := sort.SliceIsSorted(input, func(p, q int) bool { return input[p] > input[q] })
-	var result = asc || desc
 
-	return result
+	return asc || desc
 }
 
 func isUnderMaxDiff(input []int, maxDiff int) bool {
